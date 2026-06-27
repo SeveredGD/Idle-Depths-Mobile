@@ -1267,7 +1267,7 @@
 </div>
 
 
-  <span class="game-title">IDLE DEPTHS <span style="font-size:13px;letter-spacing:1px;opacity:0.6;">v1.0</span></span>
+  <span class="game-title">IDLE DEPTHS <span style="font-size:13px;letter-spacing:1px;opacity:0.6;">v1.1</span></span>
   <button id="class-switch-btn" onclick="switchClass()" title="Switch class — choose a different hero"
     style="padding:7px 18px;border:2px solid #7a5ac8;background:linear-gradient(180deg,#1e0e38,#0d0520);color:#c8a8ff;font-family:Georgia,serif;font-size:14px;font-weight:bold;cursor:pointer;border-radius:4px;letter-spacing:1px;transition:all 0.15s;flex-shrink:0;box-shadow:0 0 14px #7a5ac855,inset 0 1px 0 #ffffff11;"
     onmouseover="this.style.borderColor='#c8a84b';this.style.color='#ffe8a0';this.style.boxShadow='0 0 20px #c8a84b88,inset 0 1px 0 #ffffff22';this.style.background='linear-gradient(180deg,#2a1a48,#150a28)'"
@@ -1380,10 +1380,6 @@
         <div class="boss-announce-name" id="boss-announce-name"></div>
         <div class="boss-announce-sub">has appeared</div>
       </div>
-      <div class="enemy-name" id="enemy-name">—</div>
-      <div class="enemy-hp-outer"><div class="enemy-hp-inner" id="enemy-hp-bar" style="width:100%"></div></div>
-      <div class="enemy-hp-text" id="enemy-hp-text">— / —</div>
-      <div class="status-line" id="status-line"></div>
     </div>
 
     <!-- respawn-bar commented out
@@ -1397,20 +1393,32 @@
     <!-- Combat scene — Phaser canvas -->
     <div id="combat-scene" style="position:relative;height:480px;width:100%;background:transparent;border-bottom:2px solid #c8a84b44;box-shadow:0 4px 16px #00000088;overflow:hidden;flex-shrink:0;">
       <div id="phaser-container" style="width:100%;height:100%;position:absolute;top:0;left:0;"></div>
-      <!-- Combat HUD: gold | loop buttons | top-off overlay -->
-      <div id="combat-hud-top" style="position:absolute;top:8px;left:8px;right:8px;z-index:15;display:flex;align-items:center;justify-content:space-between;pointer-events:none;">
-        <div style="background:#00000099;border:1px solid #c8a84b44;border-radius:3px;padding:5px 12px;display:flex;align-items:center;gap:6px;pointer-events:auto;">
-          <span style="font-size:15px;color:#c8a84b;letter-spacing:1px;">⬡</span>
-          <span id="combat-gold-display" style="font-size:15px;color:#c8a84b;font-family:Georgia,serif;font-weight:bold;">0</span>
-          <span style="font-size:11px;color:#8a7a4a;">gold</span>
+      <!-- Combat HUD: enemy info row + gold/buttons row -->
+      <div id="combat-hud-top" style="position:absolute;top:0;left:0;right:0;z-index:15;display:flex;flex-direction:column;pointer-events:none;">
+        <!-- Row 1: enemy name + HP bar -->
+        <div style="background:#000000bb;border-bottom:1px solid #3a1a1a;padding:5px 10px;pointer-events:none;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;">
+            <div class="enemy-name" id="enemy-name" style="margin:0;">—</div>
+            <div class="enemy-hp-text" id="enemy-hp-text" style="margin:0;">— / —</div>
+          </div>
+          <div class="enemy-hp-outer" style="margin:0;"><div class="enemy-hp-inner" id="enemy-hp-bar" style="width:100%"></div></div>
+          <div class="status-line" id="status-line" style="margin-top:2px;"></div>
         </div>
-        <div style="background:#00000099;border:1px solid #2a2a2a44;border-radius:3px;padding:5px 8px;display:flex;align-items:center;gap:6px;pointer-events:auto;">
-          <button id="boss-loop-btn" onclick="openBossLoopMenu()" style="padding:5px 13px;border:1px solid #3a2a1a;background:#0f0a06;color:#c8a84b88;font-family:Georgia,serif;font-size:12px;cursor:pointer;border-radius:2px;transition:all 0.15s;">🎯 Target Boss</button>
-          <button id="farm-loop-btn" onclick="openFarmLoopMenu()" style="padding:5px 13px;border:1px solid #1a3a1a;background:#060f06;color:#7aaa5a88;font-family:Georgia,serif;font-size:12px;cursor:pointer;border-radius:2px;transition:all 0.15s;">🌾 Farm Zone</button>
-        </div>
-        <div style="background:#00000099;border:1px solid #1a2a3a;border-radius:3px;padding:5px 10px;display:flex;align-items:center;gap:8px;pointer-events:auto;">
-          <button id="topoff-btn" onclick="doTopOff()" style="padding:4px 12px;border:1px solid #1a2a3a;background:#060a0f;color:#5a9aca88;font-family:Georgia,serif;font-size:12px;cursor:pointer;border-radius:2px;transition:all 0.15s;" title="Heal to full (25g, once per act)">💊 Top Off</button>
-          <label id="topoff-auto-label" style="font-size:11px;color:#5a7a9a;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:4px;" title="Auto-heal to full before boss spawns"><input type="checkbox" id="topoff-auto" onchange="hero.autoTopOff=this.checked" style="margin:0;cursor:pointer;">Auto</label>
+        <!-- Row 2: gold | loop buttons | top-off -->
+        <div style="padding:5px 8px;display:flex;align-items:center;justify-content:space-between;pointer-events:none;">
+          <div style="background:#00000099;border:1px solid #c8a84b44;border-radius:3px;padding:4px 10px;display:flex;align-items:center;gap:6px;pointer-events:auto;">
+            <span style="font-size:15px;color:#c8a84b;letter-spacing:1px;">⬡</span>
+            <span id="combat-gold-display" style="font-size:15px;color:#c8a84b;font-family:Georgia,serif;font-weight:bold;">0</span>
+            <span style="font-size:11px;color:#8a7a4a;">gold</span>
+          </div>
+          <div style="background:#00000099;border:1px solid #2a2a2a44;border-radius:3px;padding:4px 6px;display:flex;align-items:center;gap:6px;pointer-events:auto;">
+            <button id="boss-loop-btn" onclick="openBossLoopMenu()" style="padding:4px 10px;border:1px solid #3a2a1a;background:#0f0a06;color:#c8a84b88;font-family:Georgia,serif;font-size:12px;cursor:pointer;border-radius:2px;transition:all 0.15s;">🎯 Target Boss</button>
+            <button id="farm-loop-btn" onclick="openFarmLoopMenu()" style="padding:4px 10px;border:1px solid #1a3a1a;background:#060f06;color:#7aaa5a88;font-family:Georgia,serif;font-size:12px;cursor:pointer;border-radius:2px;transition:all 0.15s;">🌾 Farm Zone</button>
+          </div>
+          <div style="background:#00000099;border:1px solid #1a2a3a;border-radius:3px;padding:4px 8px;display:flex;align-items:center;gap:8px;pointer-events:auto;">
+            <button id="topoff-btn" onclick="doTopOff()" style="padding:3px 10px;border:1px solid #1a2a3a;background:#060a0f;color:#5a9aca88;font-family:Georgia,serif;font-size:12px;cursor:pointer;border-radius:2px;transition:all 0.15s;" title="Heal to full (25g, once per act)">💊 Top Off</button>
+            <label id="topoff-auto-label" style="font-size:11px;color:#5a7a9a;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:4px;" title="Auto-heal to full before boss spawns"><input type="checkbox" id="topoff-auto" onchange="hero.autoTopOff=this.checked" style="margin:0;cursor:pointer;">Auto</label>
+          </div>
         </div>
       </div>
       <!-- Death overlay -->
