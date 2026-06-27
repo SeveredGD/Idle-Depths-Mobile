@@ -8,8 +8,8 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* Remove 300ms tap delay on all interactive elements */
-  a, button, input, select, textarea, [onclick], [draggable] {
+  /* Remove 300ms tap delay on buttons only — NOT on draggable elements */
+  a, button, input, select, textarea {
     touch-action: manipulation;
   }
 
@@ -19,7 +19,6 @@
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 13px;
     min-height: 100vh;
-    min-height: -webkit-fill-available;
     overflow-x: hidden;
   }
 
@@ -123,7 +122,6 @@
     grid-template-columns: 220px 1fr 210px;
     gap: 0;
     height: calc(100vh - 98px);
-    height: calc(100dvh - 98px);
     overflow: hidden;
   }
   #left-resize-handle {
