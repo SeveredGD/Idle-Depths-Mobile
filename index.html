@@ -1267,7 +1267,7 @@
 </div>
 
 
-  <span class="game-title">IDLE DEPTHS <span style="font-size:13px;letter-spacing:1px;opacity:0.6;">v1.1</span></span>
+  <span class="game-title">IDLE DEPTHS <span style="font-size:13px;letter-spacing:1px;opacity:0.6;">v1.2</span></span>
   <button id="class-switch-btn" onclick="switchClass()" title="Switch class — choose a different hero"
     style="padding:7px 18px;border:2px solid #7a5ac8;background:linear-gradient(180deg,#1e0e38,#0d0520);color:#c8a8ff;font-family:Georgia,serif;font-size:14px;font-weight:bold;cursor:pointer;border-radius:4px;letter-spacing:1px;transition:all 0.15s;flex-shrink:0;box-shadow:0 0 14px #7a5ac855,inset 0 1px 0 #ffffff11;"
     onmouseover="this.style.borderColor='#c8a84b';this.style.color='#ffe8a0';this.style.boxShadow='0 0 20px #c8a84b88,inset 0 1px 0 #ffffff22';this.style.background='linear-gradient(180deg,#2a1a48,#150a28)'"
@@ -1370,28 +1370,19 @@
       </div>
     </div>
 
-    <div id="enemy-block" style="position:relative;">
-      <!-- Ranger discipline / Rogue spec warning banner -->
-      <div id="discipline-warning" style="display:none;padding:8px 14px;background:#1a0800;border:2px solid #c85a1a;border-radius:3px;margin-bottom:6px;cursor:pointer;text-align:center;" onclick="setSkillTab(3);document.getElementById('discipline-warning').style.display='none';">
-        <div id="discipline-warning-text" style="font-size:13px;color:#ff8844;font-family:Georgia,serif;letter-spacing:1px;">⚔ Choose your Specialization to begin fighting</div>
-        <div style="font-size:10px;color:#c85a1a;margin-top:3px;">Click here or open the Skill Tree tab</div>
-      </div>
-      <div id="boss-announce">
-        <div class="boss-announce-name" id="boss-announce-name"></div>
-        <div class="boss-announce-sub">has appeared</div>
-      </div>
-    </div>
-
-    <!-- respawn-bar commented out
-    <div id="respawn-bar">
-      <span class="resp-label">Respawning…</span>
-      <div class="resp-progress"><div class="resp-fill" id="resp-fill" style="width:0%"></div></div>
-      <button class="resp-btn" onclick="respawnNow()">Respawn now</button>
-    </div>
-    -->
-
     <!-- Combat scene — Phaser canvas -->
     <div id="combat-scene" style="position:relative;height:480px;width:100%;background:transparent;border-bottom:2px solid #c8a84b44;box-shadow:0 4px 16px #00000088;overflow:hidden;flex-shrink:0;">
+      <!-- Boss announce + discipline warning overlaid inside scene -->
+      <div id="enemy-block" style="position:absolute;top:70px;left:0;right:0;z-index:16;pointer-events:none;">
+        <div id="discipline-warning" style="display:none;margin:0 8px 4px;padding:8px 14px;background:#1a0800ee;border:2px solid #c85a1a;border-radius:3px;cursor:pointer;text-align:center;pointer-events:auto;" onclick="setSkillTab(3);document.getElementById('discipline-warning').style.display='none';">
+          <div id="discipline-warning-text" style="font-size:13px;color:#ff8844;font-family:Georgia,serif;letter-spacing:1px;">⚔ Choose your Specialization to begin fighting</div>
+          <div style="font-size:10px;color:#c85a1a;margin-top:3px;">Click here or open the Skill Tree tab</div>
+        </div>
+        <div id="boss-announce" style="pointer-events:none;">
+          <div class="boss-announce-name" id="boss-announce-name"></div>
+          <div class="boss-announce-sub">has appeared</div>
+        </div>
+      </div>
       <div id="phaser-container" style="width:100%;height:100%;position:absolute;top:0;left:0;"></div>
       <!-- Combat HUD: enemy info row + gold/buttons row -->
       <div id="combat-hud-top" style="position:absolute;top:0;left:0;right:0;z-index:15;display:flex;flex-direction:column;pointer-events:none;">
