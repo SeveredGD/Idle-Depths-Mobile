@@ -8,12 +8,18 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
+  /* Remove 300ms tap delay on all interactive elements */
+  a, button, input, select, textarea, [onclick], [draggable] {
+    touch-action: manipulation;
+  }
+
   body {
     background: #0a0a0f url('https://severedgd.github.io/gamesprites/full-screen-background.png') center center / cover fixed;
     color: #d4c9a8;
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 13px;
     min-height: 100vh;
+    min-height: -webkit-fill-available;
     overflow-x: hidden;
   }
 
@@ -117,6 +123,7 @@
     grid-template-columns: 220px 1fr 210px;
     gap: 0;
     height: calc(100vh - 98px);
+    height: calc(100dvh - 98px);
     overflow: hidden;
   }
   #left-resize-handle {
@@ -1546,7 +1553,8 @@
 <script>
 // ── DragDropTouch polyfill — makes HTML5 drag-and-drop work on iOS/iPadOS ──
 (function(){
-  var _src=null,_ghost=null,_lastOver=null,_pt={x:0,y:0},_dt=null;
+  var _src=null,_ghost=null,_lastOver=null,_pt={x:0,y:0},_ptDown=null,_dt=null,_dragging=false;
+  var SLOP=8; // pixels of movement before we commit to a drag
   function _mkDT(){
     var _d={};
     return {
@@ -1557,6 +1565,7 @@
     };
   }
   function _pt2(e){var t=e.changedTouches[0];return{x:t.clientX,y:t.clientY};}
+  function _dist(a,b){var dx=a.x-b.x,dy=a.y-b.y;return Math.sqrt(dx*dx+dy*dy);}
   function _elAt(x,y){
     if(_ghost){_ghost.style.display='none';}
     var el=document.elementFromPoint(x,y);
@@ -1574,18 +1583,28 @@
     while(el){if(el.draggable)return el;el=el.parentElement;}
     return null;
   }
+  function _cancel(){
+    if(_ghost){document.body.removeChild(_ghost);_ghost=null;}
+    if(_src&&_dragging)_fire(_src,'dragend');
+    _src=null;_dt=null;_lastOver=null;_ptDown=null;_dragging=false;
+  }
   document.addEventListener('touchstart',function(e){
     var drag=_closest(e.target);
     if(!drag)return;
-    _src=drag; _dt=_mkDT(); _pt=_pt2(e);
-    _fire(_src,'dragstart');
-    e.preventDefault();
-  },{passive:false});
+    _src=drag; _dt=_mkDT(); _ptDown=_pt=_pt2(e); _dragging=false;
+    // Don't preventDefault yet — let taps on buttons still fire
+  },{passive:true});
   document.addEventListener('touchmove',function(e){
     if(!_src)return;
     _pt=_pt2(e);
+    if(!_dragging){
+      if(_dist(_pt,_ptDown)<SLOP)return; // haven't moved enough yet
+      // Crossed the threshold — commit to drag
+      _dragging=true;
+      _fire(_src,'dragstart');
+    }
+    var r=_src.getBoundingClientRect();
     if(!_ghost){
-      var r=_src.getBoundingClientRect();
       _ghost=_src.cloneNode(true);
       _ghost.style.cssText='position:fixed;pointer-events:none;z-index:99999;opacity:0.75;margin:0;transition:none;';
       _ghost.style.width=r.width+'px';_ghost.style.height=r.height+'px';
@@ -1604,18 +1623,15 @@
   },{passive:false});
   document.addEventListener('touchend',function(e){
     if(!_src)return;
-    if(_ghost){document.body.removeChild(_ghost);_ghost=null;}
-    var over=_elAt(_pt.x,_pt.y);
-    _fire(over,'drop');
-    _fire(_src,'dragend');
-    _src=null;_dt=null;_lastOver=null;
-  },{passive:false});
-  document.addEventListener('touchcancel',function(){
-    if(!_src)return;
-    if(_ghost){document.body.removeChild(_ghost);_ghost=null;}
-    _fire(_src,'dragend');
-    _src=null;_dt=null;_lastOver=null;
-  },{passive:false});
+    if(_dragging){
+      if(_ghost){document.body.removeChild(_ghost);_ghost=null;}
+      var over=_elAt(_pt.x,_pt.y);
+      _fire(over,'drop');
+      _fire(_src,'dragend');
+    }
+    _src=null;_dt=null;_lastOver=null;_ptDown=null;_dragging=false;
+  },{passive:true});
+  document.addEventListener('touchcancel',function(){_cancel();},{passive:true});
 })();
 // ── End DragDropTouch polyfill ──
 
