@@ -17,8 +17,7 @@
     color: #d4c9a8;
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 13px;
-    height: 100vh;
-    height: -webkit-fill-available;
+    height: 100dvh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -1001,6 +1000,131 @@
   .tt-cols     { display: flex; gap: 10px; }
   .tt-col      { flex: 1; }
   .tt-col-head { font-size: 10px; color: #c8a84b88; margin-bottom: 3px; text-align: center; border-bottom: 1px solid #2a2a3a; padding-bottom: 2px; }
+
+  /* ═══════════════════════════════════════════
+     MOBILE OVERRIDES
+  ═══════════════════════════════════════════ */
+
+  /* Slim topbar */
+  #topbar {
+    padding: 6px 10px !important;
+    gap: 8px !important;
+    flex-wrap: nowrap !important;
+  }
+  #topbar .game-title { font-size: 15px !important; letter-spacing: 2px !important; }
+  #topbar .hero-name  { font-size: 11px !important; }
+  .xp-wrap { min-width: 80px !important; }
+  .xp-label { font-size: 9px !important; }
+
+  /* Diffbar — compact */
+  #diffbar { padding: 4px 8px !important; gap: 4px !important; font-size: 10px !important; }
+  .diff-btn { padding: 3px 8px !important; font-size: 10px !important; }
+
+  /* Main grid → single full-width column */
+  #main {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: unset !important;
+  }
+
+  /* All panels fill the pane area; only active one visible */
+  #left-panel, #center-panel, #right-panel, #mob-more-panel {
+    display: none !important;
+    flex: 1 !important;
+    min-height: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    border-right: none !important;
+  }
+  #left-panel.mob-active,
+  #center-panel.mob-active,
+  #right-panel.mob-active,
+  #mob-more-panel.mob-active {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* Hide desktop-only chrome */
+  #left-resize-handle,
+  #center-resize-handle { display: none !important; }
+
+  /* Combat scene — shorter on phones */
+  #combat-scene { height: 220px !important; }
+
+  /* Center-bottom gear+vault: stack vertically */
+  #center-bottom {
+    flex-direction: column !important;
+    height: auto !important;
+    overflow-y: auto !important;
+    flex: 1 !important;
+    min-height: 0 !important;
+  }
+  #paperdoll-panel {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 auto !important;
+  }
+  #center-vault {
+    width: 100% !important;
+    border-left: none !important;
+    border-top: 1px solid #c8a84b33 !important;
+    padding-top: 8px !important;
+    flex: 0 0 auto !important;
+  }
+
+  /* Vault cards — bigger tap targets */
+  .vault-card {
+    padding: 8px 8px !important;
+    font-size: 12px !important;
+    cursor: pointer !important;
+  }
+  .mob-equip-btn {
+    display: inline-block !important;
+  }
+
+  /* Log section — fixed height so it doesn't push content off */
+  #log-section { flex: 0 0 160px !important; min-height: 0 !important; }
+
+  /* Skills / right panel: full scrollable */
+  #right-panel.mob-active { overflow-y: auto !important; }
+
+  /* Bottom tab bar */
+  #mob-tabbar {
+    display: flex;
+    background: rgba(6,6,10,0.95);
+    border-top: 2px solid #c8a84b55;
+    flex-shrink: 0;
+    z-index: 100;
+  }
+  .mob-tab {
+    flex: 1;
+    padding: 10px 0 8px;
+    text-align: center;
+    font-size: 10px;
+    color: #5a5a7a;
+    cursor: pointer;
+    touch-action: manipulation;
+    border: none;
+    background: none;
+    font-family: Georgia, serif;
+    letter-spacing: 0.5px;
+    transition: color 0.15s;
+    border-top: 2px solid transparent;
+    line-height: 1.3;
+  }
+  .mob-tab .mob-tab-icon { font-size: 18px; display: block; margin-bottom: 1px; }
+  .mob-tab.mob-active {
+    color: #c8a84b;
+    border-top-color: #c8a84b;
+    background: rgba(200,168,75,0.06);
+  }
+
+  /* Hide the old fixed bottom buttons on mobile */
+  body > div[style*="position:fixed"][style*="bottom"] { display: none !important; }
+
+  /* Tap-to-equip button on vault cards */
+  .mob-equip-btn { display: none; }
+
 </style>
 </head>
 <body>
@@ -1267,7 +1391,7 @@
 </div>
 
 
-  <span class="game-title">IDLE DEPTHS <span style="font-size:13px;letter-spacing:1px;opacity:0.6;">v1.2</span></span>
+  <span class="game-title">IDLE DEPTHS <span style="font-size:13px;letter-spacing:1px;opacity:0.6;">v1.1</span></span>
   <button id="class-switch-btn" onclick="switchClass()" title="Switch class — choose a different hero"
     style="padding:7px 18px;border:2px solid #7a5ac8;background:linear-gradient(180deg,#1e0e38,#0d0520);color:#c8a8ff;font-family:Georgia,serif;font-size:14px;font-weight:bold;cursor:pointer;border-radius:4px;letter-spacing:1px;transition:all 0.15s;flex-shrink:0;box-shadow:0 0 14px #7a5ac855,inset 0 1px 0 #ffffff11;"
     onmouseover="this.style.borderColor='#c8a84b';this.style.color='#ffe8a0';this.style.boxShadow='0 0 20px #c8a84b88,inset 0 1px 0 #ffffff22';this.style.background='linear-gradient(180deg,#2a1a48,#150a28)'"
@@ -1321,12 +1445,6 @@
       <div class="stat-row"><span class="stat-label" title="Multiplies status proc chance, duration, and burn damage">Status Eff.</span><span class="stat-val" id="stat-statuseffect">0%</span></div>
       <div id="mf-buff-display"></div>
       </div>
-    </div>
-
-    <!-- Growing: combat log fills available space -->
-    <div id="log-section">
-      <div class="panel-title" style="margin-bottom:4px;">Combat Log</div>
-      <div id="log-wrap"></div>
     </div>
 
     <!-- Pinned bottom: priority + bank -->
@@ -1512,6 +1630,12 @@
         </div>
       </div>
     </div>
+
+    <!-- Combat log — bottom of combat tab -->
+    <div id="log-section" style="flex:0 0 140px;min-height:0;display:flex;flex-direction:column;padding:6px 8px 4px;overflow:hidden;border-top:1px solid #1a1a2a;">
+      <div class="panel-title" style="margin-bottom:4px;font-size:10px;">Combat Log</div>
+      <div id="log-wrap" style="flex:1;min-height:0;overflow-y:auto;padding:2px;display:flex;flex-direction:column;gap:1px;background:#03030a;border:1px solid #131320;font-size:11px;"></div>
+    </div>
   </div>
 
   <!-- Right panel: skills + crafting tabs -->
@@ -1548,6 +1672,17 @@
       <div id="reforge-help" style="display:none;margin-bottom:8px;padding:8px;border:1px solid #1a2a3a;border-radius:3px;background:#050d14;font-size:9px;color:#7a9aaa;line-height:1.6;"></div>
       <div style="font-size:10px;color:#5a5a6a;margin-bottom:8px;font-style:italic;">Select a gem, then use ↻ on a vault item to reforge it. Costs 50g + 1 gem.</div>
       <div id="gem-panel"></div>
+    </div>
+  </div>
+
+  <!-- Mobile "More" pane — lives inside #main so it fills the same flex slot -->
+  <div id="mob-more-panel" style="flex:1;min-height:0;width:100%;overflow-y:auto;padding:16px;background:rgba(6,6,12,0.92);flex-direction:column;">
+    <div style="display:flex;flex-direction:column;gap:10px;max-width:400px;margin:0 auto;">
+      <div style="font-size:11px;color:#5a5a6a;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Game Menu</div>
+      <button onclick="openStats()"    style="padding:14px;border:1px solid #2a2a3a;background:#0a0a14;color:#d4c9a8;font-family:Georgia,serif;font-size:14px;cursor:pointer;border-radius:3px;text-align:left;">📊 Stats</button>
+      <button onclick="openSettings()" style="padding:14px;border:1px solid #2a2a3a;background:#0a0a14;color:#d4c9a8;font-family:Georgia,serif;font-size:14px;cursor:pointer;border-radius:3px;text-align:left;">⚙ Settings</button>
+      <button onclick="openHelp()"     style="padding:14px;border:1px solid #2a2a3a;background:#0a0a14;color:#d4c9a8;font-family:Georgia,serif;font-size:14px;cursor:pointer;border-radius:3px;text-align:left;">? Help</button>
+      <button onclick="switchClass()"  style="padding:14px;border:1px solid #7a5ac8;background:#0d0520;color:#c8a8ff;font-family:Georgia,serif;font-size:14px;cursor:pointer;border-radius:3px;text-align:left;">⚔ Switch Class</button>
     </div>
   </div>
 
@@ -15183,16 +15318,130 @@ init();
     document.addEventListener('mouseup', onUp);
   });
 })();
+
+/* ── Mobile tab switching ── */
+(function() {
+  var _cur = 'combat';
+  var PANEL_MAP = {
+    combat: 'center-panel',
+    gear:   'left-panel',
+    skills: 'right-panel',
+    more:   'mob-more-panel'
+  };
+
+  window.mobSwitchTab = function(tab) {
+    // hide all panes
+    ['center-panel','left-panel','right-panel','mob-more-panel'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.classList.remove('mob-active');
+    });
+    // deactivate all tabs
+    document.querySelectorAll('.mob-tab').forEach(function(btn) {
+      btn.classList.remove('mob-active');
+    });
+    // show target pane
+    var panelId = PANEL_MAP[tab];
+    var panel = panelId && document.getElementById(panelId);
+    if (panel) panel.classList.add('mob-active');
+    // activate tab button
+    var btn = document.getElementById('mobtab-' + tab);
+    if (btn) btn.classList.add('mob-active');
+    _cur = tab;
+
+    // Re-render when switching to gear so slots are fresh
+    if (tab === 'gear' && typeof renderEquipped === 'function') renderEquipped();
+    if (tab === 'gear' && typeof renderVault === 'function') renderVault();
+  };
+
+  // Move center-bottom (gear rows + vault) into the Gear tab (left-panel) for mobile
+  function _mobMoveGear() {
+    var cb   = document.getElementById('center-bottom');
+    var hero = document.getElementById('hero-pane');
+    var lp   = document.getElementById('left-panel');
+    if (cb && hero && lp) {
+      // insert center-bottom after hero-pane
+      hero.parentNode.insertBefore(cb, hero.nextSibling);
+    }
+  }
+
+  // Boot: move gear then show combat tab
+  function _mobBoot() {
+    _mobMoveGear();
+    mobSwitchTab('combat');
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _mobBoot);
+  } else {
+    _mobBoot();
+  }
+})();
+
+/* ── Tap-to-equip on vault cards (mobile) ── */
+(function() {
+  // Patch renderVault to add an Equip button on each card after render
+  var _origRenderVault = null;
+  function _patchVault() {
+    if (typeof renderVault !== 'function') return;
+    if (_origRenderVault) return;
+    _origRenderVault = renderVault;
+    window.renderVault = function() {
+      _origRenderVault.apply(this, arguments);
+      _injectEquipBtns();
+    };
+  }
+
+  function _injectEquipBtns() {
+    var grid = document.getElementById('vault-panel-center');
+    if (!grid) return;
+    var cards = grid.querySelectorAll('.vault-card');
+    cards.forEach(function(card) {
+      if (card.querySelector('.mob-equip-btn')) return; // already has one
+      var slot  = card.getAttribute('data-slot');
+      var idx   = card.getAttribute('data-idx');
+      if (!slot || idx === null) return;
+      var btn = document.createElement('button');
+      btn.className = 'mob-equip-btn';
+      btn.textContent = 'Equip';
+      btn.style.cssText = 'margin-top:4px;width:100%;padding:5px 0;border:1px solid #4a8a4a;background:#0a1a0a;color:#8aff8a;font-family:Georgia,serif;font-size:10px;cursor:pointer;border-radius:2px;';
+      btn.onclick = function(e) {
+        e.stopPropagation();
+        if (typeof equipFromVault === 'function') equipFromVault(slot, parseInt(idx));
+        if (typeof renderEquipped === 'function') renderEquipped();
+        if (typeof renderVault    === 'function') renderVault();
+      };
+      card.appendChild(btn);
+    });
+  }
+
+  // Try to patch after game init
+  var _tries = 0;
+  var _iv = setInterval(function() {
+    _patchVault();
+    _tries++;
+    if (_origRenderVault || _tries > 40) clearInterval(_iv);
+  }, 250);
+})();
 </script>
 
 
 
-<!-- Debug bar — hidden until Ctrl+Shift+` -->
-<div style="position:fixed;bottom:12px;right:14px;display:flex;gap:6px;z-index:150;">
-  <button onclick="openStats()" style="padding:3px 10px;border:1px solid #2a2a3a;background:#0a0a14;color:#5a5a6a;font-family:Georgia,serif;font-size:11px;cursor:pointer;border-radius:2px;transition:all 0.15s;" onmouseover="this.style.color='#c8a84b';this.style.borderColor='#4a4a2a'" onmouseout="this.style.color='#5a5a6a';this.style.borderColor='#2a2a3a'">📊 Stats</button>
-  <button onclick="openSettings()" style="padding:3px 10px;border:1px solid #2a2a3a;background:#0a0a14;color:#5a5a6a;font-family:Georgia,serif;font-size:11px;cursor:pointer;border-radius:2px;transition:all 0.15s;" onmouseover="this.style.color='#c8a84b';this.style.borderColor='#4a4a2a'" onmouseout="this.style.color='#5a5a6a';this.style.borderColor='#2a2a3a'">⚙ Settings</button>
-  <button onclick="openHelp()" style="padding:3px 10px;border:1px solid #2a2a3a;background:#0a0a14;color:#5a5a6a;font-family:Georgia,serif;font-size:11px;cursor:pointer;border-radius:2px;transition:all 0.15s;" onmouseover="this.style.color='#c8a84b';this.style.borderColor='#4a4a2a'" onmouseout="this.style.color='#5a5a6a';this.style.borderColor='#2a2a3a'">? Help</button>
+<!-- Mobile bottom tab bar -->
+<div id="mob-tabbar">
+  <button class="mob-tab mob-active" id="mobtab-combat"  onclick="mobSwitchTab('combat')">
+    <span class="mob-tab-icon">⚔</span>Combat
+  </button>
+  <button class="mob-tab" id="mobtab-gear" onclick="mobSwitchTab('gear')">
+    <span class="mob-tab-icon">🎒</span>Gear
+  </button>
+  <button class="mob-tab" id="mobtab-skills" onclick="mobSwitchTab('skills')">
+    <span class="mob-tab-icon">🌿</span>Skills
+  </button>
+  <button class="mob-tab" id="mobtab-more" onclick="mobSwitchTab('more')">
+    <span class="mob-tab-icon">⚙</span>More
+  </button>
 </div>
+
 
 <!-- Settings Overlay -->
 <div id="settings-overlay" style="display:none;position:fixed;inset:0;background:#00000099;z-index:200;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px 0;" onclick="if(event.target===this)closeSettings()">
